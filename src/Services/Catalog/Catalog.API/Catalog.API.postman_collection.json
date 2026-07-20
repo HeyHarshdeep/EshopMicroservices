@@ -1,0 +1,104 @@
+{
+  "info": {
+    "_postman_id": "90a39a60-33e2-28af-e0ed-8d79f03eeba5",
+    "name": "Catalog.API - Postman Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Starter collection for Catalog.API. Add more endpoints here as you implement them."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string",
+      "description": "Set this to your running Catalog.API base URL (including port)."
+    },
+    {
+      "key": "name",
+      "value": "Product 1234",
+      "type": "string"
+    },
+    {
+      "key": "category",
+      "value": "[\"Electronics\",\"Gadgets\"]",
+      "type": "string",
+      "description": "JSON array — inserted raw into request body (do not quote in body)."
+    },
+    {
+      "key": "description",
+      "value": "Auto-generated description",
+      "type": "string"
+    },
+    {
+      "key": "imagefile",
+      "value": "https://picsum.photos/seed/1234/200/200",
+      "type": "string"
+    },
+    {
+      "key": "price",
+      "value": "19.99",
+      "type": "string"
+    },
+    {
+      "key": "last_product_id",
+      "value": "",
+      "type": "string",
+      "description": "Captured Id from last CreateProduct response (if available)."
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Product",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Name\": \"{{name}}\",\n  \"Category\": {{category}},\n  \"Description\": \"{{description}}\",\n  \"ImageFile\": \"{{imagefile}}\",\n  \"Price\": {{price}}\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/products",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "products"
+          ]
+        },
+        "description": "Create a product. Pre-request script sets dynamic dummy values."
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.variables.set('name', 'Product ' + Math.floor(Math.random() * 10000));",
+              "pm.variables.set('category', JSON.stringify(['Electronics','Gadgets']));",
+              "pm.variables.set('description', 'Auto-generated description ' + Math.floor(Math.random() * 10000));",
+              "pm.variables.set('imagefile', 'https://picsum.photos/seed/' + Math.floor(Math.random() * 10000) + '/200/200');",
+              "pm.variables.set('price', parseFloat((Math.random() * 990 + 10).toFixed(2)));"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+              "try {",
+              "  const json = pm.response.json();",
+              "  if (json && json.Id) { pm.variables.set('last_product_id', json.Id); }",
+              "} catch (e) { /* ignore if no json */ }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
