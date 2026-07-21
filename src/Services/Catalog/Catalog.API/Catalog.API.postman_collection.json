@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:5000",
+      "value": "http://localhost:5050",
       "type": "string",
       "description": "Set this to your running Catalog.API base URL (including port)."
     },
@@ -21,7 +21,7 @@
       "key": "category",
       "value": "[\"Electronics\",\"Gadgets\"]",
       "type": "string",
-      "description": "JSON array — inserted raw into request body (do not quote in body)."
+      "description": "JSON array ï¿½ inserted raw into request body (do not quote in body)."
     },
     {
       "key": "description",
