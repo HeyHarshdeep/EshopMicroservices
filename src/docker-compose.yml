@@ -10,7 +10,30 @@ services:
       POSTGRES_DB: catalogdb
     volumes:
       - postgres_catalog:/var/lib/postgresql/data
+  basketdb:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: BasketDb
+    volumes:
+      - postgres_basket:/var/lib/postgresql/data
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile
 
 volumes:
   postgres_catalog:
+  postgres_basket:
     driver: local
+
