@@ -11,7 +11,7 @@ public class DiscountService(DiscountContext dbContext,
 {
     public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
     {
-        var coupon = await dbContext.Coupons.FirstOrDefaultAsync(x => x.ProductName == request.ProductName);
+        var coupon = await dbContext.Coupons.FirstOrDefaultAsync(x => x.ProductName.ToLower() == request.ProductName.ToLower());
 
         if (coupon is null)
             coupon = new Coupon { ProductName = "No Discount", Amount = 0, Description = "No Discount" };

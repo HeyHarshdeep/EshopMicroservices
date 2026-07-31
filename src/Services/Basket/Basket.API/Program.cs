@@ -1,5 +1,6 @@
 using BuildingBlocks.Behavior;
 using BuildingBlocks.Exceptions.Handler;
+using Discount.Grpc;
 using HealthChecks.UI.Client;
 using JasperFx;
 using Microsoft.AspNetCore.Builder;
@@ -32,9 +33,24 @@ builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
-   // options.InstanceName = "MyCache";
+    // options.InstanceName = "MyCache";
 });
 
+//Grpc Services
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(opt =>
+{
+    opt.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+}).ConfigurePrimaryHttpMessageHandler(() => {
+    var handler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
+
+    return handler;
+});
+;
+
+//Cross Cutting services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Services.AddHealthChecks()
@@ -47,7 +63,7 @@ var app = builder.Build();
 
 app.MapCarter();
 app.UseExceptionHandler(options => { });
-app.UseHealthChecks("/health", new HealthCheckOptions 
-{ ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse} );
+app.UseHealthChecks("/health", new HealthCheckOptions
+{ ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse });
 
 app.Run();
