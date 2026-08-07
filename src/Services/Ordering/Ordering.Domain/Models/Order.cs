@@ -46,7 +46,7 @@ public class Order : Aggregate<OrderId>
     /// Current status of the order. Initialized to Pending by default.
     /// Use methods on the aggregate to change status so you can validate transitions.
     /// </summary>
-    public OrderStatus OrderStatus { get; private set; } = OrderStatus.Pending;
+    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
 
     /// <summary>
     /// Computed total price of the order. This is calculated from the sum of each
@@ -61,4 +61,52 @@ public class Order : Aggregate<OrderId>
     // Note: For learning purposes this class focuses on structure and comments.
     // In a production DDD model you would add constructors, factories and methods
     // such as AddItem, RemoveItem, ChangeQuantity, PlaceOrder, CancelOrder, etc.
+
+    public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
+    {
+        var order = new Order
+        {
+            Id = id,
+
+            CustomerId = customerId,
+            OrderName = orderName,
+            ShippingAddress = shippingAddress,
+            BillingAddress = billingAddress,
+            Payment = payment,
+            Status = OrderStatus.Pending
+        };
+
+        order.AddDomainEvent(new OrderCreatedEvent(order));
+        return order;
+    }
+
+    public void update(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
+    {
+        OrderName = orderName;
+        ShippingAddress = shippingAddress;
+        BillingAddress = billingAddress;
+        Payment = payment;
+        Status = OrderStatus.Pending;
+
+        AddDomainEvent(new OrderUpdatedEvent(this));
+    }
+
+    public void Add(ProductId productId, int quantity, decimal price)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price);
+
+        var orderItem = new OrderItem(Id, productId, quantity, price);
+        _orderItems.Add(orderItem);
+    }
+
+    public void remove(ProductId productId)
+    {
+        var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
+        if (orderItem is not null)
+        {
+            _orderItems.Remove(orderItem);
+        }
+
+    }
 }
