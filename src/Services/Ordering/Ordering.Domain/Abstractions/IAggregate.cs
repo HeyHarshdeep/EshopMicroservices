@@ -29,5 +29,5 @@ public interface IAggregate : IEntity
     /// Dequeue and return all accumulated domain events. The aggregate should remove
     /// events from its internal list so they are not published more than once.
     /// </summary>
-    IDomainEvent[] CleadDomainEvents();
+    IDomainEvent[] ClearDomainEvents();
 }

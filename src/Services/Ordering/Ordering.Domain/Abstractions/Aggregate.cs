@@ -27,7 +27,7 @@
         /// Return and clear all domain events. Typically infrastructure will call this
         /// after saving changes and then publish the returned events.
         /// </summary>
-        public IDomainEvent[] CleadDomainEvents()
+        public IDomainEvent[] ClearDomainEvents()
         {
             IDomainEvent[] dequeueEvents = _domainEvents.ToArray();
 

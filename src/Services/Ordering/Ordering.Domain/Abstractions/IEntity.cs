@@ -29,7 +29,7 @@ public interface IEntity
     /// <summary>
     /// Who created the entity (could be a username, system id, etc.).
     /// </summary>
-    public string CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
     /// <summary>
     /// When the entity was last modified.
@@ -39,5 +39,5 @@ public interface IEntity
     /// <summary>
     /// Who last modified the entity.
     /// </summary>
-    public string LastModifiedBy { get; set; }
+    public string? LastModifiedBy { get; set; }
 }
