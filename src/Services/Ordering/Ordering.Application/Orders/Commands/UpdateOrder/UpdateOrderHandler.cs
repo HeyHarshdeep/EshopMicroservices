@@ -33,7 +33,7 @@ public class UpdateOrderHandler(IApplicationDbContext dbContext)
         var updatedBillingAddress = Address.Of(orderDto.BillingAddress.FirstName, orderDto.BillingAddress.LastName, orderDto.BillingAddress.EmailAddress, orderDto.BillingAddress.AddressLine, orderDto.BillingAddress.Country, orderDto.BillingAddress.State, orderDto.BillingAddress.ZipCode);
         var updatedPayment = Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod);
 
-        order.update(
+        order.Update(
             orderName: OrderName.Of(orderDto.OrderName),
             shippingAddress: updatedShippingAddress,
             billingAddress: updatedBillingAddress,
