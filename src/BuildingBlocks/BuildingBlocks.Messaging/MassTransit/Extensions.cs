@@ -13,6 +13,7 @@ public static class Extentions
         {
             config.SetKebabCaseEndpointNameFormatter();
 
+            //will act as a both publisher and consumer
             if (assembly != null)
                 config.AddConsumers(assembly);
 
